@@ -1,5 +1,5 @@
-CC=/usr/local/intel/ClusterStudioXE_2013/impi/4.1.3.048/bin64/mpicc
-CFLAGS=-Wall -O3 -lm
+CC=mpicc
+CFLAGS=-Wall
 
 reduce : reduce.c
 	$(CC) -o $@ $< ${CFLAGS}
@@ -7,4 +7,4 @@ reduce : reduce.c
 .PHONY: clean
 
 clean:
-	rm reduce
+	rm -f reduce

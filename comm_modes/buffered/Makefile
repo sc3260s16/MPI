@@ -1,5 +1,5 @@
-CC=/usr/local/intel/ClusterStudioXE_2013/impi/4.1.3.048/bin64/mpicc
-CFLAGS=-Wall -O3
+CC=mpicc
+CFLAGS=-Wall
 
 buffered : buffered.c
 	$(CC) -o $@ $< ${CFLAGS}
@@ -7,4 +7,4 @@ buffered : buffered.c
 .PHONY: clean
 
 clean:
-	rm standard
+	rm -f buffered
