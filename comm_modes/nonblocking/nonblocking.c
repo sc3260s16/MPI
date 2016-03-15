@@ -30,7 +30,7 @@ int main(int argc, char ** argv)
   printf("nprocs: %d rank: %d\n",nprocs,rank);  
 
   int * array = malloc( ARRAY_SIZE * sizeof(int) );
-  int i,j,jmax = 50000;
+  int i,j,jmax = 50;
 
   for ( j=0; j<jmax; j++) {
 
