@@ -4,6 +4,9 @@
 #include <math.h> // ceil()
 #include "mpi.h"
 
+// WARNING: Do not attempt to run this program with >=10 processes
+//          as the array being scattered is only 10 elements long
+
 void print_recv_data(float * data,int data_size,int myrank,int np)
 {
 
@@ -12,7 +15,7 @@ void print_recv_data(float * data,int data_size,int myrank,int np)
   int rank = 0;
   while (rank < np) {
     if (myrank == rank) {
-      printf("rank %d, recv_data after scatter: ",myrank);
+      printf("rank %d, recv_data after scatterv: ",myrank);
       int i;
       for ( i=0; i<data_size; i++ ) {
         printf("%f ",data[i]);
@@ -47,22 +50,31 @@ int main(int argc, char ** argv)
   }
   
   if ( mype == 0 )
-    printf("rank: %d, data before scatter: %f %f %f %f %f %f %f %f %f %f\n", 
+    printf("rank: %d, data before scatterv: %f %f %f %f %f %f %f %f %f %f\n", 
             mype,data[0],data[1],data[2],data[3],data[4],data[5],
             data[6],data[7],data[8],data[9]);
 
   int recv_buff_size = (int) ceil( 10.0/(float)nprocs ) ;
   float * recv_data = malloc( recv_buff_size * sizeof(float) );
+  int remain = recv_buff_size * nprocs - 10;
+  int last_greedy_proc = nprocs - remain - 1;
 
-  MPI_Scatter(data, recv_buff_size, MPI_FLOAT, recv_data, recv_buff_size, MPI_FLOAT, 0, MPI_COMM_WORLD);
+  int scounts[nprocs];
+  int displs[nprocs];
+  int i;
+  for (i=0; i<nprocs; i++)
+  {
+    if ( i <= last_greedy_proc ) {
+      scounts[i] = recv_buff_size;
+      displs[i] = i * recv_buff_size;
+    }
+    else {
+      scounts[i] = recv_buff_size - 1;
+      displs[i] = (last_greedy_proc + 1)*recv_buff_size + (i-last_greedy_proc-1)*(recv_buff_size-1);  
+    }
+  }
 
-  // If the data you're scattering is not evenly divisible by the number of procs, you may have 
-  // to get creative to ensure proper load balancing. These two lines will work well for
-  // 6 processes:
-  //MPI_Scatter(data, 1, MPI_FLOAT, recv_data, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
-  //MPI_Scatter(&data[nprocs], 1, MPI_FLOAT, &recv_data[1], 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
-  //
-  // Or use MPI_Scatterv!!
+  MPI_Scatterv(data, scounts, displs, MPI_FLOAT, recv_data, recv_buff_size, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
   print_recv_data(recv_data,recv_buff_size,mype,nprocs);
 
