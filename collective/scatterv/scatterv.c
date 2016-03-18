@@ -56,12 +56,15 @@ int main(int argc, char ** argv)
 
   int recv_buff_size = (int) ceil( 10.0/(float)nprocs ) ;
   float * recv_data = malloc( recv_buff_size * sizeof(float) );
+  int i;
+  for (i=0; i<recv_buff_size; i++)
+    recv_data[i] = 0.0;
+
   int remain = recv_buff_size * nprocs - 10;
   int last_greedy_proc = nprocs - remain - 1;
 
   int scounts[nprocs];
   int displs[nprocs];
-  int i;
   for (i=0; i<nprocs; i++)
   {
     if ( i <= last_greedy_proc ) {
