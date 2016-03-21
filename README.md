@@ -1,4 +1,4 @@
-i# MPI Tutorials
+# MPI Tutorials
 
 You need to have Intel compilers in your environment 
 to run these examples:
@@ -11,13 +11,13 @@ SLURM has its own MPI job management command called ```srun```, which you can th
 
 ## Order of running:
 
-1. hello
-2. point_to_point
-3. trapezoid
-4. collective
-	- bcast
-	- scatter
-	- scatterv
-	- scatter_gather
-	- reduce
-5. derived_data_types
+1. hello/
+2. point_to_point/
+3. trapezoid/
+4. collective/
+	- bcast/
+	- scatter/
+	- scatterv/
+	- scatter_gather/
+	- reduce/
+5. derived_data_types/
