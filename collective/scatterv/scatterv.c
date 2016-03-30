@@ -75,6 +75,7 @@ int main(int argc, char ** argv)
       scounts[i] = recv_buff_size - 1;
       displs[i] = (last_greedy_proc + 1)*recv_buff_size + (i-last_greedy_proc-1)*(recv_buff_size-1);  
     }
+    printf("i: %d scounts[i]: %d displs[i]: %d\n",i,scounts[i],displs[i]);
   }
 
   MPI_Scatterv(data, scounts, displs, MPI_FLOAT, recv_data, recv_buff_size, MPI_FLOAT, 0, MPI_COMM_WORLD);
